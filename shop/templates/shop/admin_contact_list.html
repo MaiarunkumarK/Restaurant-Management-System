@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #28a745; /* Green color for header */
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1; /* Light grey on hover */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light grey for even rows */
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff; /* White for odd rows */
+        }
+        
+        /* Top Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0e2238;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 20px; /* Space between links */
+        }
+
+        .navbar-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .active {
+            background-color: rgba(255, 255, 255, 0.2); /* Highlight for active link */
+            border-radius: 5px; /* Optional: Add rounded corners */
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            table {
+                font-size: 0.9rem;
+            }
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-logo">Admin Dashboard</div>
+        <div class="navbar-links">
+            <a href="{% url 'admin_dashboard' %}" class="navbar-link">Home</a>
+            <a href="{% url 'admin_product_list' %}" class="navbar-link">Products</a>
+            <a href="{% url 'admin_order_list' %}" class="navbar-link">Orders</a>
+            <a href="{% url 'admin_order_updates' %}" class="navbar-link">Order Updates</a>
+            <a href="{% url 'admin_rating_list' %}" class="navbar-link">Ratings</a>
+            <a href="{% url 'admin_contact_list' %}" class="navbar-link">Contacts</a>
+            <a href="{% url 'admin_user_list' %}" class="navbar-link">Users</a>
+        </div>
+    </div>
+    <h1>Contact List</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Email</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.desc }}</td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

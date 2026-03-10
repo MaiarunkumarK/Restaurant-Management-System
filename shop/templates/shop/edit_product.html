@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <style>
+        /* Include your existing styles here */
+    </style>
+</head>
+<body>
+    <h1>Edit Product</h1>
+
+    <div id="update-product-form">
+        <form action="{% url 'update_product' %}" method="POST" enctype="multipart/form-data" onsubmit="updateProduct(event)">
+            {% csrf_token %}
+            <input type="hidden" id="product_id" name="product_id" value="{{ product.id }}">
+
+            <label for="product_name_update">Product Name:</label>
+            <input type="text" id="product_name_update" name="product_name" value="{{ product.product_name }}" required>
+
+            <label for="category_update">Category:</label>
+            <input type="text" id="category_update" name="category" value="{{ product.category }}" required>
+
+            <label for="subcategory_update">Subcategory:</label>
+            <input type="text" id="subcategory_update" name="subcategory" value="{{ product.subcategory|default:'' }}">
+
+            <label for="price_update">Price:</label>
+            <input type="number" id="price_update" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+
+            <label for="description_update">Description:</label>
+            <textarea id="description_update" name="description" rows="4" required>{{ product.desc|default:'' }}</textarea>
+
+            <label for="pub_date_update">Publication Date:</label>
+            <input type="date" id="pub_date_update" name="pub_date" value="{{ product.pub_date }}" required>
+
+            <label for="average_rating_update">Average Rating:</label>
+            <input type="number" id="average_rating_update" name="average_rating" step="0.1" min="0" max="5" value="{{ product.average_rating|default:0 }}">
+
+            <label for="total_ratings_update">Total Ratings:</label>
+            <input type="number" id="total_ratings_update" name="total_ratings" min="0" value="{{ product.total_ratings|default:0 }}">
+
+            <label for="image_update">Image:</label>
+            <input type="file" id="image_update" name="image" accept="image/*" onchange="previewUpdateImage(event)">
+            <img id="image-update-preview" src="{{ product.image|default:'' }}" alt="Image Preview" style="display:block; max-width: 200px; margin-top: 10px;">
+
+            <button type="submit">Update Product</button>
+        </form>
+    </div>
+
+    <script>
+        function updateProduct(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target; // Get the form that triggered the event
+            const formData = new FormData(form); // Create FormData object from the form
+
+            fetch('/shop/update-product/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name="csrfmiddlewaretoken"]').value // Include CSRF token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Product updated successfully.");
+                    window.location.href = '/shop/admin_product_list/'; // Redirect to the product list page
+                } else {
+                    alert('An error occurred while updating the product.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the product.');
+            });
+        }
+
+        function previewUpdateImage(event) {
+            const imageUpdatePreview = document.getElementById('image-update-preview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imageUpdatePreview.src = e.target.result;
+                    imageUpdatePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
